@@ -9,6 +9,7 @@ import { BebasNeue_400Regular } from "@expo-google-fonts/bebas-neue";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./navigation/AppNavigator";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -21,11 +22,13 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-
+  const queryClient = new QueryClient();
   return (
-    <NavigationContainer>
-      <AppNavigator />
-      <StatusBar style="dark" />
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <AppNavigator />
+        <StatusBar style="dark" />
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
