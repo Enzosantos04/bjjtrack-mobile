@@ -1,18 +1,43 @@
 import React from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import { View, Text, SafeAreaView, ScrollView, Alert } from "react-native";
 import styles from "../styles/screens/CreateAcademyStyles";
 import { COLORS } from "../constants/colors";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import BackButton from "../components/BackButton";
+import { useState } from "react";
+import { useCreateAcademy } from "@/hooks/useCreateAcademy";
 
 export default function CreateAcademyScreen() {
+  const { mutate: createAcademy } = useCreateAcademy();
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
+  const [adminName, setAdminName] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
 
+  const handleCreateAcademy = () => {
+    createAcademy(
+      {
+        academy: {
+          name: name,
+          slug: slug,
+          logoUrl: logoUrl,
+        },
+        admin: {
+          name: adminName,
+          email: adminEmail,
+          password: adminPassword,
+        },
+      },
+      {
+        onSuccess: (data) => {
+          Alert.alert("Academy created successfully:", data);
+        },
+      },
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.canvas }}>
       <ScrollView
@@ -38,32 +63,51 @@ export default function CreateAcademyScreen() {
               <Input
                 label="Nome da Academia"
                 placeholder="Ex: Gracie Barra Centro"
-                editable={false}
+                editable={true}
+                value={name}
+                onChangeText={setName}
+              />
+              <Input
+                label="Slug da Academia"
+                placeholder="Ex: gracie-barra-centro"
+                editable={true}
+                value={slug}
+                onChangeText={setSlug}
               />
 
               <Input
                 label="Professor Responsável"
                 placeholder="Ex: Mestre Carlos Gracie"
-                editable={false}
+                editable={true}
+                value={adminName}
+                onChangeText={setAdminName}
               />
 
               <Input
-                label="Cidade / Estado"
-                placeholder="Ex: Rio de Janeiro, RJ"
-                editable={false}
+                label="Email do Administrador"
+                placeholder="Ex: admin@graciebarra.com"
+                editable={true}
+                value={adminEmail}
+                onChangeText={setAdminEmail}
               />
 
               <Input
-                label="WhatsApp / Telefone"
-                placeholder="Ex: (21) 99999-9999"
-                keyboardType="phone-pad"
-                editable={false}
+                label="Senha do Administrador"
+                placeholder="*******"
+                editable={true}
+                value={adminPassword}
+                onChangeText={setAdminPassword}
+                secureTextEntry
               />
             </View>
           </View>
 
           <View style={styles.actionContainer}>
-            <Button variant="primary" text="Criar Perfil da Academia" />
+            <Button
+              variant="primary"
+              text="Criar Perfil da Academia"
+              onPress={handleCreateAcademy}
+            />
           </View>
         </View>
       </ScrollView>
