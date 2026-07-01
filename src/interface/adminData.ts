@@ -1,4 +1,4 @@
-export default interface AdminData {
+export interface AdminData {
   name: string;
   email: string;
   password: string;
